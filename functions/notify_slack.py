@@ -5,98 +5,128 @@ import urllib.request, urllib.parse
 import logging
 
 
+# needed when using local ZAP proxy
+# import ssl
+# ssl._create_default_https_context = ssl._create_unverified_context
+
 # Decrypt encrypted URL with KMS
 def decrypt(encrypted_url):
-  region = os.environ['AWS_REGION']
-  try:
-    kms = boto3.client('kms', region_name=region)
-    plaintext = kms.decrypt(CiphertextBlob=base64.b64decode(encrypted_url))['Plaintext']
-    return plaintext.decode()
-  except Exception:
-    logging.exception("Failed to decrypt URL with KMS")
+    region = os.environ['AWS_REGION']
+    try:
+        kms = boto3.client('kms', region_name=region)
+        plaintext = kms.decrypt(CiphertextBlob=base64.b64decode(encrypted_url))['Plaintext']
+        return plaintext.decode()
+    except Exception:
+        logging.exception("Failed to decrypt URL with KMS")
 
 
 def cloudwatch_notification(message, region):
-  states = {'OK': 'good', 'INSUFFICIENT_DATA': 'warning', 'ALARM': 'danger'}
+    states = {'OK': 'good', 'INSUFFICIENT_DATA': 'warning', 'ALARM': 'danger'}
 
-  return {
-    "color": states[message['NewStateValue']],
-    "fallback": "Alarm {} triggered".format(message['AlarmName']),
-    "fields": [
-      { "title": "Alarm Name", "value": message['AlarmName'], "short": True },
-      { "title": "Alarm Description", "value": message['AlarmDescription'], "short": False},
-      { "title": "Alarm reason", "value": message['NewStateReason'], "short": False},
-      { "title": "Old State", "value": message['OldStateValue'], "short": True },
-      { "title": "Current State", "value": message['NewStateValue'], "short": True },
-      {
-        "title": "Link to Alarm",
-        "value": "https://console.aws.amazon.com/cloudwatch/home?region=" + region + "#alarm:alarmFilter=ANY;name=" + urllib.parse.quote(message['AlarmName']),
-        "short": False
-      }
-    ]
-  }
+    return {
+        "color": states[message['NewStateValue']],
+        "fallback": "Alarm {} triggered".format(message['AlarmName']),
+        "fields": [
+            {"title": "Alarm Name", "value": message['AlarmName'], "short": True},
+            {"title": "Alarm Description", "value": message['AlarmDescription'], "short": False},
+            {"title": "Alarm reason", "value": message['NewStateReason'], "short": False},
+            {"title": "Old State", "value": message['OldStateValue'], "short": True},
+            {"title": "Current State", "value": message['NewStateValue'], "short": True},
+            {
+                "title": "Link to Alarm",
+                "value": "https://console.aws.amazon.com/cloudwatch/home?region=" + region + "#alarm:alarmFilter=ANY;name=" + urllib.parse.quote(message['AlarmName']),
+                "short": False
+            }
+        ]
+    }
+
+
+def codestar_notification(message):
+    colors = {'SUCCEEDED': '0f0', 'STARTED': 'ff0', 'FAILED': 'f00'}
+    detail = message["detail"]
+    notification = {
+        "pretext": message["detailType"],
+        "color": colors[detail["state"]] or "555",
+        "fields": [
+            {"title": "Pipeline", "value": detail["pipeline"], "short": True},
+            {"title": "State", "value": detail["state"], "short": True},
+            {"title": "Stage", "value": detail["stage"], "short": True} if "stage" in detail else None,
+            {"title": "Action", "value": detail["action"], "short": True} if "action" in detail else None,
+            {"title": "Additional information", "value": detail["additionalAttributes"]["additionalInformation"], "short": False} if "additionalAttributes" in detail and "additionalInformation" in detail["additionalAttributes"] else None,
+        ]
+    }
+
+    if "additionalAttributes" in message and "failedActions" in message["additionalAttributes"] :
+        for failedAction in message["additionalAttributes"]["failedActions"]:
+            notification["fields"].append({"title": "Failed action", "value": failedAction["action"], "short": False})
+            notification["fields"].append({"title": "Additional information", "value": failedAction["additionalInformation"], "short": False})
+
+    return notification
 
 
 def default_notification(subject, message):
-  return {
-    "fallback": "A new message",
-    "fields": [{"title": subject if subject else "Message", "value": json.dumps(message) if type(message) is dict else message, "short": False}]
-  }
+    return {
+        "fallback": "A new message",
+        "fields": [{"title": subject if subject else "Message", "value": json.dumps(message) if type(message) is dict else message, "short": False}]
+    }
 
 
 # Send a message to a slack channel
 def notify_slack(subject, message, region):
-  slack_url = os.environ['SLACK_WEBHOOK_URL']
-  if not slack_url.startswith("http"):
-    slack_url = decrypt(slack_url)
+    slack_url = os.environ['SLACK_WEBHOOK_URL']
+    if not slack_url.startswith("http"):
+        slack_url = decrypt(slack_url)
 
-  slack_channel = os.environ['SLACK_CHANNEL']
-  slack_username = os.environ['SLACK_USERNAME']
-  slack_emoji = os.environ['SLACK_EMOJI']
+    slack_channel = os.environ['SLACK_CHANNEL']
+    slack_username = os.environ['SLACK_USERNAME']
+    slack_emoji = os.environ['SLACK_EMOJI']
 
-  payload = {
-    "channel": slack_channel,
-    "username": slack_username,
-    "icon_emoji": slack_emoji,
-    "attachments": []
-  }
+    payload = {
+        "channel": slack_channel,
+        "username": slack_username,
+        "icon_emoji": slack_emoji,
+        "attachments": []
+    }
 
-  if type(message) is str:
+    if type(message) is str:
+        try:
+            message = json.loads(message)
+        except json.JSONDecodeError as err:
+            logging.exception(f'JSON decode error: {err}')
+
+    if "AlarmName" in message:
+        notification = cloudwatch_notification(message, region)
+        payload['text'] = "AWS CloudWatch notification - " + message["AlarmName"]
+        payload['attachments'].append(notification)
+    elif "notificationRuleArn" in message and "codestar" in message["notificationRuleArn"]:
+        notification = codestar_notification(message)
+        payload['attachments'].append(notification)
+    else:
+        payload['text'] = "AWS notification"
+        payload['attachments'].append(default_notification(subject, message))
+
+    data = urllib.parse.urlencode({"payload": json.dumps(payload)}).encode("utf-8")
+    req = urllib.request.Request(slack_url)
+
     try:
-      message = json.loads(message)
-    except json.JSONDecodeError as err:
-      logging.exception(f'JSON decode error: {err}')
+        result = urllib.request.urlopen(req, data)
+        return json.dumps({"code": result.getcode(), "info": result.info().as_string()})
 
-  if "AlarmName" in message:
-    notification = cloudwatch_notification(message, region)
-    payload['text'] = "AWS CloudWatch notification - " + message["AlarmName"]
-    payload['attachments'].append(notification)
-  else:
-    payload['text'] = "AWS notification"
-    payload['attachments'].append(default_notification(subject, message))
-
-  data = urllib.parse.urlencode({"payload": json.dumps(payload)}).encode("utf-8")
-  req = urllib.request.Request(slack_url)
-
-  try:
-    result = urllib.request.urlopen(req, data)
-    return json.dumps({"code": result.getcode(), "info": result.info().as_string()})
-
-  except HTTPError as e:
-    logging.error("{}: result".format(e))
-    return json.dumps({"code": e.getcode(), "info": e.info().as_string()})
+    except HTTPError as e:
+        logging.error("{}: result".format(e))
+        return json.dumps({"code": e.getcode(), "info": e.info().as_string()})
 
 
 def lambda_handler(event, context):
-  if 'LOG_EVENTS' in os.environ and os.environ['LOG_EVENTS'] == 'True':
-    logging.warning('Event logging enabled: `{}`'.format(json.dumps(event)))
+    if 'LOG_EVENTS' in os.environ and os.environ['LOG_EVENTS'] == 'True':
+        logging.warning('Event logging enabled: `{}`'.format(json.dumps(event)))
 
-  subject = event['Records'][0]['Sns']['Subject']
-  message = event['Records'][0]['Sns']['Message']
-  region = event['Records'][0]['Sns']['TopicArn'].split(":")[3]
-  response = notify_slack(subject, message, region)
+    subject = event['Records'][0]['Sns']['Subject'] or ""
+    message = event['Records'][0]['Sns']['Message']
+    region = event['Records'][0]['Sns']['TopicArn'].split(":")[3]
+    response = notify_slack(subject, message, region)
 
-  if json.loads(response)["code"] != 200:
-    logging.error("Error: received status `{}` using event `{}` and context `{}`".format(json.loads(response)["info"], event, context))
+    if json.loads(response)["code"] != 200:
+        logging.error("Error: received status `{}` using event `{}` and context `{}`".format(json.loads(response)["info"], event, context))
 
-  return response
+    return response

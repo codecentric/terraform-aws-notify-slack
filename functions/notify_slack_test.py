@@ -31,28 +31,28 @@ events = (
         }
     ),
     (
-      {
-        "Records": [
-          {
-            "EventSource": "aws:sns",
-            "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:eu-west-2:735598076380:service-updates:d29b4e2c-6840-9c4e-ceac-17128efcc337",
-            "Sns": {
-              "Type": "Notification",
-              "MessageId": "f86e3c5b-cd17-1ab8-80e9-c0776d4f1e7a",
-              "TopicArn": "arn:aws:sns:eu-west-2:735598076380:service-updates",
-              "Subject": "All Fine",
-              "Message": "This\nis\na typical multi-line\nmessage from SNS!\n\nHave a ~good~ amazing day! :)",
-              "Timestamp": "2019-02-12T15:45:24.091Z",
-              "SignatureVersion": "1",
-              "Signature": "WMYdVRN7ECNXMWZ0faRDD4fSfALW5MISB6O//LMd/LeSQYNQ/1eKYEE0PM1SHcH+73T/f/eVHbID/F203VZaGECQTD4LVA4B0DGAEY39LVbWdPTCHIDC6QCBV5ScGFZcROBXMe3UBWWMQAVTSWTE0eP526BFUTecaDFM4b9HMT4NEHWa4A2TA7d888JaVKKdSVNTd4bGS6Q2XFG1MOb652BRAHdARO7A6//2/47JZ5COM6LR0/V7TcOYCBZ20CRF6L5XLU46YYL3I1PNGKbEC1PIeVDVJVPcA17NfUbFXWYBX8LHfM4O7ZbGAPaGffDYLFWM6TX1Y6fQ01OSMc21OdUGV6HQR01e%==",
-              "SigningCertUrl": "https://sns.eu-west-2.amazonaws.com/SimpleNotificationService-7dd85a2b76adaa8dd603b7a0c9150589.pem",
-              "UnsubscribeUrl": "https://sns.eu-west-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:eu-west-2:735598076380:service-updates:d29b4e2c-6840-9c4e-ceac-17128efcc337",
-              "MessageAttributes": {}
-            }
-          }
-        ]
-      }
+        {
+            "Records": [
+                {
+                    "EventSource": "aws:sns",
+                    "EventVersion": "1.0",
+                    "EventSubscriptionArn": "arn:aws:sns:eu-west-2:735598076380:service-updates:d29b4e2c-6840-9c4e-ceac-17128efcc337",
+                    "Sns": {
+                        "Type": "Notification",
+                        "MessageId": "f86e3c5b-cd17-1ab8-80e9-c0776d4f1e7a",
+                        "TopicArn": "arn:aws:sns:eu-west-2:735598076380:service-updates",
+                        "Subject": "All Fine",
+                        "Message": "This\nis\na typical multi-line\nmessage from SNS!\n\nHave a ~good~ amazing day! :)",
+                        "Timestamp": "2019-02-12T15:45:24.091Z",
+                        "SignatureVersion": "1",
+                        "Signature": "WMYdVRN7ECNXMWZ0faRDD4fSfALW5MISB6O//LMd/LeSQYNQ/1eKYEE0PM1SHcH+73T/f/eVHbID/F203VZaGECQTD4LVA4B0DGAEY39LVbWdPTCHIDC6QCBV5ScGFZcROBXMe3UBWWMQAVTSWTE0eP526BFUTecaDFM4b9HMT4NEHWa4A2TA7d888JaVKKdSVNTd4bGS6Q2XFG1MOb652BRAHdARO7A6//2/47JZ5COM6LR0/V7TcOYCBZ20CRF6L5XLU46YYL3I1PNGKbEC1PIeVDVJVPcA17NfUbFXWYBX8LHfM4O7ZbGAPaGffDYLFWM6TX1Y6fQ01OSMc21OdUGV6HQR01e%==",
+                        "SigningCertUrl": "https://sns.eu-west-2.amazonaws.com/SimpleNotificationService-7dd85a2b76adaa8dd603b7a0c9150589.pem",
+                        "UnsubscribeUrl": "https://sns.eu-west-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:eu-west-2:735598076380:service-updates:d29b4e2c-6840-9c4e-ceac-17128efcc337",
+                        "MessageAttributes": {}
+                    }
+                }
+            ]
+        }
     ),
     (
         {
@@ -67,12 +67,84 @@ events = (
         }
     ),
     (
-      {
-        "AlarmType": "Unsupported alarm type",
-        "AWSAccountId": "000000000000",
-        "NewStateValue": "ALARM",
-      }
-    )
+        {
+            "AlarmType": "Unsupported alarm type",
+            "AWSAccountId": "000000000000",
+            "NewStateValue": "ALARM",
+        }
+    ),
+    (
+        {
+            "Records": [
+                {
+                    "EventSource": "aws:sns",
+                    "EventVersion": "1.0",
+                    "EventSubscriptionArn": "arn:aws:sns:eu-central-1:027711332157:pipeline-vehicle-data-service:fa6a78a0-efe1-497c-ad4d-b6ba86e68654",
+                    "Sns": {
+                        "Type": "Notification",
+                        "MessageId": "20e4d57b-cb76-5ca2-87cc-82a647798f0b",
+                        "TopicArn": "arn:aws:sns:eu-central-1:027711332157:pipeline-vehicle-data-service",
+                        "Subject": "",
+                        "Message": "{\"account\":\"027711332157\",\"detailType\":\"CodePipeline Pipeline Execution State Change\",\"region\":\"eu-central-1\",\"source\":\"aws.codepipeline\",\"time\":\"2020-09-17T16:07:30Z\",\"notificationRuleArn\":\"arn:aws:codestar-notifications:eu-central-1:027711332157:notificationrule/6abaca0764a25dc1c31639594491b1e93471b1b6\",\"detail\":{\"pipeline\":\"vehicle-data-service\",\"execution-id\":\"714ab2fb-0942-469d-8f19-bb1d91cf56df\",\"state\":\"SUCCEEDED\",\"version\":2.0},\"resources\":[\"arn:aws:codepipeline:eu-central-1:027711332157:vehicle-data-service\"],\"additionalAttributes\":{}}",
+                        "Timestamp": "2020-09-17T16:07:43.991Z",
+                        "SignatureVersion": "1",
+                        "Signature": "nZKm/guHeli+kWTyxhWKlWHe+0R4gqJH+a2msvBA6SFxnvYgjUpKgXqZogLRnAT2t0fC+VmpNUe+5xwJm07h1TT6MjI1H4JsfhLlkvVJPcjZcRPyeIgCIL7QArG9n9LBTQqDGphg5bLAEnGdtEdQNoSOp2qJ7e54zHM4TE0wwYYtCh1hePMGBGrzP0oIh/Ew9YeZR1zh8EmvDtXDJlw/vB4AFBA6PqL0s1sKygO/b6Lq08F5qfwswUzhLZyn0JCJRPjxHn1+Rm7dg7RkPvRszYqlTQswUL97Nm4S8TfI10b75P76uxCEgXo7P9MtqqYQ35Z8il7Sa1qJ25L2w+wSXg==",
+                        "SigningCertUrl": "https://sns.eu-central-1.amazonaws.com/SimpleNotificationService-a86cb10b4e1f29c941702d737128f7b6.pem",
+                        "UnsubscribeUrl": "https://sns.eu-central-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:eu-central-1:027711332157:pipeline-vehicle-data-service:fa6a78a0-efe1-497c-ad4d-b6ba86e68654",
+                        "MessageAttributes": {}
+                    }
+                }
+            ]
+        }
+    ),
+    (
+        {
+            "Records": [
+                {
+                    "EventSource": "aws:sns",
+                    "EventVersion": "1.0",
+                    "EventSubscriptionArn": "arn:aws:sns:eu-central-1:027711332157:pipeline-vehicle-data-service:fa6a78a0-efe1-497c-ad4d-b6ba86e68654",
+                    "Sns": {
+                        "Type": "Notification",
+                        "MessageId": "20e4d57b-cb76-5ca2-87cc-82a647798f0b",
+                        "TopicArn": "arn:aws:sns:eu-central-1:027711332157:pipeline-vehicle-data-service",
+                        "Subject": "",
+                        "Message": "{\"account\": \"027711332157\", \"detailType\": \"CodePipeline Stage Execution State Change\", \"region\": \"eu-central-1\", \"source\": \"aws.codepipeline\", \"time\": \"2020-09-17T07:53:52Z\", \"notificationRuleArn\": \"arn:aws:codestar-notifications:eu-central-1:027711332157:notificationrule/27e461fdf20af5537776c26a3ccdf468a232888c\", \"detail\": {\"pipeline\": \"vehicle-data-service\", \"execution-id\": \"569ec428-ad10-44e9-8d3e-f6f67c1f50a4\", \"state\": \"FAILED\", \"stage\": \"Deploy-Prod\", \"version\": 2.0}, \"resources\": [\"arn:aws:codepipeline:eu-central-1:027711332157:vehicle-data-service\"], \"additionalAttributes\": {\"failedActionCount\": 1, \"failedActions\": [{\"action\": \"approval\", \"additionalInformation\": \"skip this one - the next is in the pipeline\"}]}}",
+                        "Timestamp": "2020-09-17T16:07:43.991Z",
+                        "SignatureVersion": "1",
+                        "Signature": "nZKm/guHeli+kWTyxhWKlWHe+0R4gqJH+a2msvBA6SFxnvYgjUpKgXqZogLRnAT2t0fC+VmpNUe+5xwJm07h1TT6MjI1H4JsfhLlkvVJPcjZcRPyeIgCIL7QArG9n9LBTQqDGphg5bLAEnGdtEdQNoSOp2qJ7e54zHM4TE0wwYYtCh1hePMGBGrzP0oIh/Ew9YeZR1zh8EmvDtXDJlw/vB4AFBA6PqL0s1sKygO/b6Lq08F5qfwswUzhLZyn0JCJRPjxHn1+Rm7dg7RkPvRszYqlTQswUL97Nm4S8TfI10b75P76uxCEgXo7P9MtqqYQ35Z8il7Sa1qJ25L2w+wSXg==",
+                        "SigningCertUrl": "https://sns.eu-central-1.amazonaws.com/SimpleNotificationService-a86cb10b4e1f29c941702d737128f7b6.pem",
+                        "UnsubscribeUrl": "https://sns.eu-central-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:eu-central-1:027711332157:pipeline-vehicle-data-service:fa6a78a0-efe1-497c-ad4d-b6ba86e68654",
+                        "MessageAttributes": {}
+                    }
+                }
+            ]
+        }
+    ),
+    (
+        {
+            "Records": [
+                {
+                    "EventSource": "aws:sns",
+                    "EventVersion": "1.0",
+                    "EventSubscriptionArn": "arn:aws:sns:eu-central-1:027711332157:pipeline-vehicle-data-service:fa6a78a0-efe1-497c-ad4d-b6ba86e68654",
+                    "Sns": {
+                        "Type": "Notification",
+                        "MessageId": "20e4d57b-cb76-5ca2-87cc-82a647798f0b",
+                        "TopicArn": "arn:aws:sns:eu-central-1:027711332157:pipeline-vehicle-data-service",
+                        "Subject": "",
+                        "Message": "{\"account\": \"027711332157\", \"detailType\": \"CodePipeline Action Execution State Change\", \"region\": \"eu-central-1\", \"source\": \"aws.codepipeline\", \"time\": \"2020-09-17T09:07:31Z\", \"notificationRuleArn\": \"arn:aws:codestar-notifications:eu-central-1:027711332157:notificationrule/e32f649902a7242575c5d6529cb189d7acc122c4\", \"detail\": {\"pipeline\": \"vehicle-data-service\", \"execution-id\": \"30ead51b-cec1-45a8-a217-0e9017a4f6b4\", \"stage\": \"Deploy-Prod\", \"action\": \"approval\", \"state\": \"STARTED\", \"region\": \"eu-central-1\", \"type\": {\"owner\": \"AWS\", \"provider\": \"Manual\", \"category\": \"Approval\", \"version\": \"1\"}, \"version\": 2.0}, \"resources\": [\"arn:aws:codepipeline:eu-central-1:027711332157:vehicle-data-service\"], \"additionalAttributes\": {}}",
+                        "Timestamp": "2020-09-17T16:07:43.991Z",
+                        "SignatureVersion": "1",
+                        "Signature": "nZKm/guHeli+kWTyxhWKlWHe+0R4gqJH+a2msvBA6SFxnvYgjUpKgXqZogLRnAT2t0fC+VmpNUe+5xwJm07h1TT6MjI1H4JsfhLlkvVJPcjZcRPyeIgCIL7QArG9n9LBTQqDGphg5bLAEnGdtEdQNoSOp2qJ7e54zHM4TE0wwYYtCh1hePMGBGrzP0oIh/Ew9YeZR1zh8EmvDtXDJlw/vB4AFBA6PqL0s1sKygO/b6Lq08F5qfwswUzhLZyn0JCJRPjxHn1+Rm7dg7RkPvRszYqlTQswUL97Nm4S8TfI10b75P76uxCEgXo7P9MtqqYQ35Z8il7Sa1qJ25L2w+wSXg==",
+                        "SigningCertUrl": "https://sns.eu-central-1.amazonaws.com/SimpleNotificationService-a86cb10b4e1f29c941702d737128f7b6.pem",
+                        "UnsubscribeUrl": "https://sns.eu-central-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:eu-central-1:027711332157:pipeline-vehicle-data-service:fa6a78a0-efe1-497c-ad4d-b6ba86e68654",
+                        "MessageAttributes": {}
+                    }
+                }
+            ]
+        }
+    ),
 )
 
 
